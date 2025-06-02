@@ -37,9 +37,9 @@ USER nextjs
 # Expose port
 EXPOSE 3000
 
-# Health check
+# Health check using wget (included in Alpine by default)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:3000/scrape || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/scrape || exit 1
 
 # Start the application
 CMD ["pnpm", "start"] 
