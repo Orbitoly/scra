@@ -1,0 +1,20 @@
+{
+    "name": "playwright-scraper",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "build": "tsc",
+        "start": "NODE_OPTIONS='--loader ts-node/esm' node scraper.ts",
+        "dev": "NODE_OPTIONS='--loader ts-node/esm' pnpx ts-node scraper.ts"
+    },
+    "dependencies": {
+        "@types/express": "^5.0.2",
+        "express": "^4.21.2",
+        "playwright": "^1.52.0"
+    },
+    "devDependencies": {
+        "@types/node": "^22.15.21",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    }
+}
