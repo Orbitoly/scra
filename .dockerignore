@@ -6,6 +6,7 @@ README.md
 .env
 .nyc_output
 coverage
+.cache
 .DS_Store
 *.log
 .vscode

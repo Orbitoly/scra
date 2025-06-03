@@ -1,51 +1,46 @@
-# FROM mcr.microsoft.com/playwright:v1.44.0-jammy
+# Use Node.js 18 LTS with Alpine for smaller image size
+FROM node:18-alpine
 
-# WORKDIR /app
+# Install necessary packages for Puppeteer
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
 
-# # Copy package manager files
-# COPY package.json pnpm-lock.yaml ./
+# Tell Puppeteer to skip installing Chromium. We'll be using the installed package.
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
-# # Install PNPM + project deps
-# RUN npm install -g pnpm
-# RUN pnpm install --frozen-lockfile
+# Create app directory
+WORKDIR /usr/src/app
 
-# # Force playwright browser install in correct path
-# RUN PLAYWRIGHT_BROWSERS_PATH=/app/.playwright \
-#     pnpm exec playwright install --with-deps chromium
-
-# # Copy rest of source
-# COPY . .
-
-# # Create writable path for browsers
-# RUN mkdir -p /app/.playwright && chown -R 1001:1001 /app/.playwright
-
-# # Create non-root user and switch
-# RUN adduser --disabled-password --gecos "" nextjs && \
-#     chown -R nextjs:nextjs /app
-# USER nextjs
-
-# # Expose port
-# EXPOSE 3000
-
-# # Healthcheck
-# HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-#   CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
-
-# # Run app
-# CMD ["pnpm", "start"]
-
-
-FROM mcr.microsoft.com/playwright:v1.44.0-jammy
-
-WORKDIR /app
-
+# Copy package files
 COPY package*.json ./
-RUN npm install
+COPY pnpm-lock.yaml ./
 
+# Install pnpm
+RUN npm install -g pnpm
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile --prod
+
+# Copy app source
 COPY . .
 
-RUN npx playwright install --with-deps chromium
+# Create a non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
 
+# Change ownership of the app directory
+RUN chown -R nextjs:nodejs /usr/src/app
+USER nextjs
+
+# Expose port
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Start the application
+CMD ["pnpm", "start"]
