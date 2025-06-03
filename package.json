@@ -1,17 +1,19 @@
 {
-    "name": "playwright-scraper",
-    "type": "commonjs",
-    "scripts": {
-        "dev": "ts-node scraper.ts",
-        "start": "ts-node scraper.ts"
-    },
-    "dependencies": {
-        "express": "^4.18.2",
-        "playwright": "^1.44.0"
-    },
-    "devDependencies": {
-        "ts-node": "^10.9.2",
-        "typescript": "^5.4.0",
-        "@types/express": "^4.17.17"
-    }
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^4.26.2",
+    "@fastify/cors": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
 }
