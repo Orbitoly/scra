@@ -106,6 +106,6 @@ app.get("/health", (_, res) => {
   res.json({ status: "healthy", timestamp: new Date().toISOString() });
 });
 
-app.listen(PORT, () => {
+app.listen(Number(PORT), "0.0.0.0", () => {
   console.log(`🚀 Listening at http://localhost:${PORT}`);
 });
