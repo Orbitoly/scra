@@ -8,11 +8,8 @@ RUN apk add --no-cache \
     freetype-dev \
     harfbuzz \
     ca-certificates \
-    ttf-freefont
-
-# Set Playwright to use installed Chromium
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
+    ttf-freefont \
+    wget
 
 # Create app directory
 WORKDIR /app
@@ -25,6 +22,9 @@ COPY pnpm-lock.yaml ./
 RUN npm install -g pnpm
 RUN pnpm install --frozen-lockfile
 
+# Install Playwright browsers (this step was missing!)
+RUN pnpm exec playwright install chromium
+
 # Copy source code
 COPY . .
 
@@ -32,6 +32,11 @@ COPY . .
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 RUN chown -R nextjs:nodejs /app
+
+# Set Playwright environment variables for the non-root user
+ENV PLAYWRIGHT_BROWSERS_PATH=/app/.playwright
+RUN mkdir -p /app/.playwright && chown -R nextjs:nodejs /app/.playwright
+
 USER nextjs
 
 # Expose port
