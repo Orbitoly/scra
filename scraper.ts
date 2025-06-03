@@ -3,6 +3,7 @@ import { chromium } from "playwright";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+process.env.PLAYWRIGHT_BROWSERS_PATH = "/app/.playwright";
 
 app.get("/scrape", async (_, res) => {
   let browser;
